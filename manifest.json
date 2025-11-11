@@ -1,0 +1,47 @@
+
+{
+  "name": "TikTik - Video Sharing Platform",
+  "short_name": "TikTik",
+  "description": "A complete YouTube clone with video player, comments, and social features",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ff0000",
+  "orientation": "portrait-primary",
+  "categories": ["entertainment", "video", "social"],
+  "lang": "en",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23ff0000'/%3E%3Cpolygon points='40,35 40,65 65,50' fill='white'/%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23ff0000'/%3E%3Cpolygon points='40,35 40,65 65,50' fill='white'/%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 390 844'%3E%3Crect width='390' height='844' fill='%23f5f5f5'/%3E%3Ctext x='195' y='422' text-anchor='middle' font-family='Arial' font-size='20' fill='%23333'%3ETikTik Mobile Screenshot%3C/text%3E%3C/svg%3E",
+      "sizes": "390x844",
+      "type": "image/svg+xml",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Crect width='1920' height='1080' fill='%23f5f5f5'/%3E%3Ctext x='960' y='540' text-anchor='middle' font-family='Arial' font-size='32' fill='%23333'%3ETikTik Desktop Screenshot%3C/text%3E%3C/svg%3E",
+      "sizes": "1920x1080",
+      "type": "image/svg+xml",
+      "form_factor": "wide"
+    }
+  ],
+  "features": [
+    "video-player",
+    "comments",
+    "search",
+    "offline-support"
+  ]
+}

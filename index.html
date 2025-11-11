@@ -1,0 +1,2825 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTik - Video Sharing Platform</title>
+    <meta name="description" content="TikTik - Discover and share amazing videos from creators around the world. Watch, upload, and connect with the community.">
+    <meta property="og:title" content="TikTik - Video Sharing Platform">
+    <meta property="og:description" content="Discover and share amazing videos from creators around the world">
+    <meta property="og:type" content="website">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#ff0000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="TikTik">
+    
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Video.js for HLS playback -->
+    <link href="https://vjs.zencdn.net/8.6.1/video-js.css" rel="stylesheet" />
+    <script src="https://vjs.zencdn.net/8.6.1/video.min.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <button class="menu-btn" id="menuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo">
+                <i class="fas fa-play-circle"></i>
+                <span>TikTik</span>
+            </div>
+        </div>
+        
+        <div class="header-center">
+            <div class="search-container">
+                <input type="text" placeholder="Search videos..." class="search-input" id="searchInput">
+                <button class="search-btn" id="searchBtn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <button class="icon-btn" id="createBtn" title="Create">
+                <i class="fas fa-plus"></i>
+            </button>
+            <button class="icon-btn" id="themeToggle" title="Toggle Theme">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button class="icon-btn" id="adminPanelBtn" title="Admin Panel">
+                <i class="fas fa-cog"></i>
+            </button>
+            
+            <button class="btn btn-primary" id="loginBtn" style="display: none;">Login</button>
+            <button class="btn btn-secondary" id="registerBtn" style="display: none;">Register</button>
+
+            <div id="profile-container" class="profile-container" style="display: none;">
+                <img id="profile-pic" class="profile-pic" src="" alt="Profile" onclick="toggleProfileMenu()" />
+                <div id="profile-menu" class="profile-menu">
+                    <div class="profile-section">
+                        <div class="profile-info">
+                            <img id="profile-avatar" class="profile-avatar" src="" alt="Profile" />
+                            <div class="profile-details">
+                                <p id="profile-name" class="profile-name"></p>
+                                <p id="profile-email" class="profile-email"></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="menu-divider"></div>
+                    
+                    <div class="menu-item" onclick="window.tiktikApp.navigateToPage('library')">
+                        <i class="fas fa-folder-open"></i>
+                        <span>Your Channel</span>
+                    </div>
+                    
+                    <div class="menu-item" onclick="window.tiktikApp.navigateToPage('subscriptions')">
+                        <i class="fas fa-users"></i>
+                        <span>Subscriptions</span>
+                    </div>
+                    
+                    <div class="menu-item" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Sign out</span>
+                    </div>
+                    
+                    <div class="menu-divider"></div>
+                    
+                    <div class="menu-item" onclick="window.tiktikApp.showUploadModal()">
+                        <i class="fas fa-video"></i>
+                        <span>TikTik Studio</span>
+                    </div>
+                    
+                    <div class="menu-item" onclick="window.tiktikApp.toggleTheme()">
+                        <i class="fas fa-palette"></i>
+                        <span>Appearance</span>
+                    </div>
+                    
+                    <div class="menu-item" onclick="window.tiktikApp.showAdminPanel()">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </div>
+    
+    <div class="menu-item" onclick="openLanguage()">
+      <i class="fas fa-language"></i>
+      <span>Language: English</span>
+      <i class="fas fa-chevron-right"></i>
+    </div>
+    
+    <div class="menu-item" onclick="openRestrictedMode()">
+      <i class="fas fa-shield-alt"></i>
+      <span>Restricted Mode: Off</span>
+      <i class="fas fa-chevron-right"></i>
+    </div>
+    
+    <div class="menu-item" onclick="openLocation()">
+      <i class="fas fa-map-marker-alt"></i>
+      <span>Location: India</span>
+      <i class="fas fa-chevron-right"></i>
+    </div>
+    
+    <div class="menu-item" onclick="openKeyboardShortcuts()">
+      <i class="fas fa-keyboard"></i>
+      <span>Keyboard shortcuts</span>
+    </div>
+    
+    <div class="menu-divider"></div>
+    
+    <div class="menu-item" onclick="openSettings()">
+      <i class="fas fa-cog"></i>
+      <span>Settings</span>
+    </div>
+    
+    <div class="menu-item" onclick="openHelp()">
+      <i class="fas fa-question-circle"></i>
+      <span>Help</span>
+    </div>
+    
+    <div class="menu-item" onclick="sendFeedback()">
+      <i class="fas fa-flag"></i>
+      <span>Send feedback</span>
+    </div>
+  </div>
+</div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" data-page="home">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="#" class="nav-item" data-page="trending">
+                <i class="fas fa-fire"></i>
+                <span>Trending</span>
+            </a>
+            <a href="#" class="nav-item" data-page="subscriptions">
+                <i class="fas fa-users"></i>
+                <span>Subscriptions</span>
+            </a>
+            
+            <div class="nav-divider"></div>
+            
+            <div class="nav-section-title">You</div>
+            <a href="#" class="nav-item" data-page="library">
+                <i class="fas fa-folder-open"></i>
+                <span>Your Channel</span>
+            </a>
+            <a href="#" class="nav-item" data-page="history">
+                <i class="fas fa-history"></i>
+                <span>History</span>
+            </a>
+            <a href="#" class="nav-item" data-page="liked">
+                <i class="fas fa-thumbs-up"></i>
+                <span>Liked Videos</span>
+            </a>
+            <a href="#" class="nav-item" data-page="watchlater">
+                <i class="fas fa-clock"></i>
+                <span>Watch Later</span>
+            </a>
+            <a href="#" class="nav-item" data-page="downloads">
+                <i class="fas fa-download"></i>
+                <span>Downloads</span>
+            </a>
+            
+            <div class="nav-divider"></div>
+            
+            <div class="nav-section-title">Explore</div>
+            <a href="#" class="nav-item" data-page="music">
+                <i class="fas fa-music"></i>
+                <span>Music</span>
+            </a>
+            <a href="#" class="nav-item" data-page="sports">
+                <i class="fas fa-futbol"></i>
+                <span>Sports</span>
+            </a>
+            <a href="#" class="nav-item" data-page="gaming">
+                <i class="fas fa-gamepad"></i>
+                <span>Gaming</span>
+            </a>
+            <a href="#" class="nav-item" data-page="news">
+                <i class="fas fa-newspaper"></i>
+                <span>News</span>
+            </a>
+            <a href="#" class="nav-item" data-page="learning">
+                <i class="fas fa-graduation-cap"></i>
+                <span>Learning</span>
+            </a>
+            
+            <div class="nav-divider"></div>
+            
+            <div class="nav-section-title">More from TikTik</div>
+            <a href="#" class="nav-item" data-page="settings">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+            <a href="#" class="nav-item" data-page="help">
+                <i class="fas fa-question-circle"></i>
+                <span>Help</span>
+            </a>
+            <a href="#" class="nav-item" data-page="feedback">
+                <i class="fas fa-flag"></i>
+                <span>Send Feedback</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Home Page -->
+        <div class="page active" id="homePage">
+            <div class="video-grid" id="videoGrid">
+                <!-- Videos will be dynamically loaded here -->
+            </div>
+        </div>
+
+        <!-- Other Pages -->
+        <div class="page" id="trendingPage">
+            <h2>Trending Videos</h2>
+            <div class="video-grid" id="trendingGrid">
+                <!-- Trending videos will be loaded here -->
+            </div>
+        </div>
+
+        <div class="page" id="subscriptionsPage">
+            <h2>Subscriptions</h2>
+            <div class="empty-state">
+                <i class="fas fa-users"></i>
+                <p>No subscriptions yet</p>
+                <span>Subscribe to channels to see their latest videos here</span>
+            </div>
+        </div>
+
+        <div class="page" id="libraryPage">
+            <div class="channel-header">
+                <div class="channel-banner">
+                    <img id="channelBanner" src="https://pixabay.com/get/g2d6e4de48b7bd3a87afab6e869007196adcc1cb3dfd663e6e585bcffd24c3260ab24ba71895df36ec3dc5902cba221c21d6918c76ffa1876e8ac616c437334eb_1280.jpg" alt="Channel Banner">
+                </div>
+                <div class="channel-info-header">
+                    <img class="channel-avatar-large" id="channelAvatar" src="https://pixabay.com/get/g1882a617f55023cde87198feea9e830686b0a69ae7f315295cebe2b111a575a3d2dd94672359c9d34b332edd722a8e7d502b680acae2e35040353fd2a2ee0f9a_1280.jpg" alt="Channel Avatar">
+                    <div class="channel-details">
+                        <h1 id="channelName">My Channel</h1>
+                        <div class="channel-stats">
+                            <span id="subscriberCount">0 subscribers</span>
+                            <span id="videoCount">0 videos</span>
+                        </div>
+                        <button class="btn btn-primary" id="editChannelBtn">
+                            <i class="fas fa-edit"></i>
+                            Edit Channel
+                        </button>
+                    </div>
+                </div>
+                <div class="channel-tabs">
+                    <button class="channel-tab active" data-tab="videos">Videos</button>
+                    <button class="channel-tab" data-tab="shorts">Shorts</button>
+                    <button class="channel-tab" data-tab="live">Live</button>
+                    <button class="channel-tab" data-tab="wallet">Wallet</button>
+                    <button class="channel-tab" data-tab="playlists">Playlists</button>
+                    <button class="channel-tab" data-tab="about">About</button>
+                </div>
+            </div>
+            
+            <div class="channel-content">
+                <div class="tab-content active" id="videosTab">
+                    <div class="upload-section">
+                        <div class="upload-prompt">
+                            <i class="fas fa-video"></i>
+                            <h3>Upload your first video</h3>
+                            <p>Share your story with the world</p>
+                            <button class="btn btn-primary" id="uploadVideoBtn">
+                                <i class="fas fa-upload"></i>
+                                Upload Video
+                            </button>
+                        </div>
+                    </div>
+                    <div class="my-videos-grid" id="myVideosGrid">
+                        <!-- User's uploaded videos will appear here -->
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="shortsTab">
+                    <div class="upload-section">
+                        <div class="upload-prompt">
+                            <i class="fas fa-mobile-alt"></i>
+                            <h3>Create your first Short</h3>
+                            <p>Make short, engaging vertical videos</p>
+                            <button class="btn btn-primary" id="uploadShortBtn">
+                                <i class="fas fa-video"></i>
+                                Create Short
+                            </button>
+                        </div>
+                    </div>
+                    <div class="my-videos-grid" id="myShortsGrid">
+                        <!-- User's shorts will appear here -->
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="liveTab">
+                    <div class="upload-section">
+                        <div class="upload-prompt">
+                            <i class="fas fa-broadcast-tower"></i>
+                            <h3>Go live</h3>
+                            <p>Stream live to your audience</p>
+                            <button class="btn btn-primary" id="goLiveBtn">
+                                <i class="fas fa-video"></i>
+                                Go Live
+                            </button>
+                        </div>
+                    </div>
+                    <div class="my-videos-grid" id="myLiveGrid">
+                        <!-- User's live streams will appear here -->
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="walletTab">
+                    <div class="wallet-section">
+                        <div class="wallet-header">
+                            <h3><i class="fas fa-wallet"></i> Creator Wallet</h3>
+                            <div class="wallet-balance">
+                                <span class="balance-label">Available Balance</span>
+                                <span class="balance-amount" id="walletBalance">$0.00</span>
+                            </div>
+                        </div>
+                        
+                        <div class="wallet-stats">
+                            <div class="stat-card">
+                                <i class="fas fa-dollar-sign"></i>
+                                <div class="stat-info">
+                                    <span class="stat-value" id="totalEarnings">$0.00</span>
+                                    <span class="stat-label">Total Earnings</span>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <i class="fas fa-hand-holding-usd"></i>
+                                <div class="stat-info">
+                                    <span class="stat-value" id="pendingPayouts">$0.00</span>
+                                    <span class="stat-label">Pending Payouts</span>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <i class="fas fa-chart-line"></i>
+                                <div class="stat-info">
+                                    <span class="stat-value" id="monthlyEarnings">$0.00</span>
+                                    <span class="stat-label">This Month</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="wallet-actions">
+                            <button class="btn btn-primary" id="requestPayoutBtn">
+                                <i class="fas fa-money-check-alt"></i>
+                                Request Payout
+                            </button>
+                            <button class="btn btn-secondary" id="viewTransactionsBtn">
+                                <i class="fas fa-history"></i>
+                                Transaction History
+                            </button>
+                        </div>
+
+                        <div class="transactions-section" id="transactionsSection" style="display: none;">
+                            <h4>Transaction History</h4>
+                            <div class="transactions-list" id="transactionsList">
+                                <p class="no-transactions">No transactions yet</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="playlistsTab">
+                    <div class="empty-state">
+                        <i class="fas fa-list"></i>
+                        <p>No playlists yet</p>
+                        <span>Create playlists to organize your videos</span>
+                        <button class="btn btn-primary" id="createPlaylistBtn">
+                            <i class="fas fa-plus"></i>
+                            Create Playlist
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="aboutTab">
+                    <div class="about-section">
+                        <h3>Channel Description</h3>
+                        <p id="channelDescription">Welcome to my channel! Here you'll find amazing content.</p>
+                        
+                        <h3>Channel Details</h3>
+                        <div class="channel-details-grid">
+                            <div class="detail-item">
+                                <strong>Joined:</strong>
+                                <span id="joinDate">Today</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Total views:</strong>
+                                <span id="totalViews">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page" id="historyPage">
+            <h2>Watch History</h2>
+            <div class="video-grid" id="historyGrid">
+                <!-- Watch history will be loaded here -->
+            </div>
+        </div>
+
+        <div class="page" id="likedPage">
+            <h2>Liked Videos</h2>
+            <div class="video-grid" id="likedGrid">
+                <!-- Liked videos will be loaded here -->
+            </div>
+        </div>
+
+        <div class="page" id="watchlaterPage">
+            <h2>Watch Later</h2>
+            <div class="empty-state">
+                <i class="fas fa-clock"></i>
+                <p>No videos saved for later</p>
+                <span>Save videos to watch them later</span>
+            </div>
+        </div>
+
+        <div class="page" id="downloadsPage">
+            <h2>Downloads</h2>
+            <div class="empty-state">
+                <i class="fas fa-download"></i>
+                <p>No downloaded videos</p>
+                <span>Download videos to watch offline</span>
+            </div>
+        </div>
+
+        <div class="page" id="musicPage">
+            <h2>Music</h2>
+            <div class="video-grid" id="musicGrid">
+                <!-- Music videos will be loaded here -->
+            </div>
+        </div>
+
+        <div class="page" id="sportsPage">
+            <h2>Sports</h2>
+            <div class="video-grid" id="sportsGrid">
+                <!-- Sports videos will be loaded here -->
+            </div>
+        </div>
+
+        <div class="page" id="gamingPage">
+            <h2>Gaming</h2>
+            <div class="video-grid" id="gamingGrid">
+                <!-- Gaming videos will be loaded here -->
+            </div>
+        </div>
+
+        <div class="page" id="newsPage">
+            <h2>News</h2>
+            <div class="video-grid" id="newsGrid">
+                <!-- News videos will be loaded here -->
+            </div>
+        </div>
+
+        <div class="page" id="learningPage">
+            <h2>Learning</h2>
+            <div class="video-grid" id="learningGrid">
+                <!-- Learning videos will be loaded here -->
+            </div>
+        </div>
+
+        <div class="page" id="settingsPage">
+            <h2>Settings</h2>
+            <div class="settings-container">
+                <div class="settings-sidebar">
+                    <!-- General Settings -->
+                    <div class="settings-category">
+                        <h3>General</h3>
+                        <a href="#" class="settings-tab active" data-tab="general">General</a>
+                        <a href="#" class="settings-tab" data-tab="switch-account">Switch account</a>
+                        <a href="#" class="settings-tab" data-tab="family-centre">Family Centre</a>
+                    </div>
+                    
+                    <!-- Notifications -->
+                    <div class="settings-category">
+                        <h3>Notifications</h3>
+                        <a href="#" class="settings-tab" data-tab="notifications">Notifications</a>
+                    </div>
+                    
+                    <!-- Billing -->
+                    <div class="settings-category">
+                        <h3>Billing</h3>
+                        <a href="#" class="settings-tab" data-tab="purchases">Purchases and Memberships</a>
+                        <a href="#" class="settings-tab" data-tab="billing">Billing and payments</a>
+                    </div>
+                    
+                    <!-- Data & Privacy -->
+                    <div class="settings-category">
+                        <h3>Data & Privacy</h3>
+                        <a href="#" class="settings-tab" data-tab="manage-history">Manage all History</a>
+                        <a href="#" class="settings-tab" data-tab="your-data">Your Data in TikTik</a>
+                        <a href="#" class="settings-tab" data-tab="privacy">Privacy</a>
+                        <a href="#" class="settings-tab" data-tab="connected-apps">Connected apps</a>
+                    </div>
+                    
+                    <!-- Features -->
+                    <div class="settings-category">
+                        <h3>Features</h3>
+                        <a href="#" class="settings-tab" data-tab="experimental">Try experimental new features</a>
+                    </div>
+                    
+                    <!-- Video & Audio -->
+                    <div class="settings-category">
+                        <h3>Video and audio preferences</h3>
+                        <a href="#" class="settings-tab" data-tab="video-quality">Video quality preferences</a>
+                        <a href="#" class="settings-tab" data-tab="playback">Playback</a>
+                        <a href="#" class="settings-tab" data-tab="captions">Captions</a>
+                        <a href="#" class="settings-tab" data-tab="data-saving">Data saving</a>
+                        <a href="#" class="settings-tab" data-tab="downloads">Downloads</a>
+                        <a href="#" class="settings-tab" data-tab="live-chat">Live chat</a>
+                        <a href="#" class="settings-tab" data-tab="accessibility">Accessibility</a>
+                        <a href="#" class="settings-tab" data-tab="watch-tv">Watch on TV</a>
+                    </div>
+                    
+                    <!-- Help & Policy -->
+                    <div class="settings-category">
+                        <h3>Help and Policy</h3>
+                        <a href="#" class="settings-tab" data-tab="help">Help</a>
+                        <a href="#" class="settings-tab" data-tab="terms">TikTik Terms of service</a>
+                        <a href="#" class="settings-tab" data-tab="send-feedback">Send feedback</a>
+                        <a href="#" class="settings-tab" data-tab="about">About</a>
+                    </div>
+                </div>
+                
+                <div class="settings-content">
+                    <!-- General Tab -->
+                    <div class="settings-tab-content active" id="general-content">
+                        <h3>General Settings</h3>
+                        <div class="settings-section">
+                            <div class="setting-item">
+                                <label>Language</label>
+                                <select id="language">
+                                    <option value="en">English</option>
+                                    <option value="hi">हिंदी</option>
+                                    <option value="es">Español</option>
+                                    <option value="fr">Français</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <label>Location</label>
+                                <select id="location">
+                                    <option value="in">India</option>
+                                    <option value="us">United States</option>
+                                    <option value="uk">United Kingdom</option>
+                                    <option value="ca">Canada</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="restrictedMode">
+                                    Restricted Mode
+                                </label>
+                                <p class="setting-description">This helps hide potentially mature videos</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Switch Account Tab -->
+                    <div class="settings-tab-content" id="switch-account-content">
+                        <h3>Switch Account</h3>
+                        <div class="settings-section">
+                            <div class="account-list">
+                                <div class="account-item active">
+                                    <img src="https://pixabay.com/get/g1882a617f55023cde87198feea9e830686b0a69ae7f315295cebe2b111a575a3d2dd94672359c9d34b332edd722a8e7d502b680acae2e35040353fd2a2ee0f9a_1280.jpg" alt="Current Account">
+                                    <div class="account-details">
+                                        <h4>Current Account</h4>
+                                        <p>user@example.com</p>
+                                    </div>
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <button class="btn btn-secondary add-account-btn">
+                                    <i class="fas fa-plus"></i>
+                                    Add another account
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Family Centre Tab -->
+                    <div class="settings-tab-content" id="family-centre-content">
+                        <h3>Family Centre</h3>
+                        <div class="settings-section">
+                            <div class="family-centre-info">
+                                <i class="fas fa-users fa-3x"></i>
+                                <h4>Connect with your teen on TikTik</h4>
+                                <p>Family Centre helps you set digital ground rules and stay connected.</p>
+                                <button class="btn btn-primary">Get started</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Notifications Tab -->
+                    <div class="settings-tab-content" id="notifications-content">
+                        <h3>Notifications</h3>
+                        <div class="settings-section">
+                            <h4>Content Notifications</h4>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="subscriptions-notif" checked>
+                                    Subscriptions
+                                </label>
+                                <p class="setting-description">Notify me about activity from the channels I'm subscribed to</p>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="recommended-notif">
+                                    Recommended videos
+                                </label>
+                                <p class="setting-description">Notify me of videos I might like based on what I watch</p>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="live-notif">
+                                    Live streams
+                                </label>
+                                <p class="setting-description">Notify me when channels I'm subscribed to are live streaming</p>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="premieres-notif">
+                                    Premieres
+                                </label>
+                                <p class="setting-description">Notify me about upcoming premieres</p>
+                            </div>
+                            
+                            <h4>Community Notifications</h4>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="comment-notif" checked>
+                                    Comments and replies
+                                </label>
+                                <p class="setting-description">Notify me about comments on my videos and replies to my comments</p>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="mentions-notif">
+                                    Mentions
+                                </label>
+                                <p class="setting-description">Notify me when someone mentions me</p>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="likes-notif">
+                                    Likes and reactions
+                                </label>
+                                <p class="setting-description">Notify me when someone likes my content</p>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="followers-notif">
+                                    New followers
+                                </label>
+                                <p class="setting-description">Notify me when I get new followers</p>
+                            </div>
+                            
+                            <h4>System Notifications</h4>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="updates-notif">
+                                    Product updates
+                                </label>
+                                <p class="setting-description">Notify me about new features and updates</p>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="policy-notif">
+                                    Policy updates
+                                </label>
+                                <p class="setting-description">Notify me about policy and guideline changes</p>
+                            </div>
+                            
+                            <h4>Notification Scheduling</h4>
+                            <div class="setting-item">
+                                <label>Quiet hours</label>
+                                <div class="time-range">
+                                    <input type="time" id="quiet-start" value="22:00">
+                                    <span>to</span>
+                                    <input type="time" id="quiet-end" value="08:00">
+                                </div>
+                                <p class="setting-description">No notifications during these hours</p>
+                            </div>
+                            <div class="setting-item">
+                                <label>Notification frequency</label>
+                                <select id="notification-frequency">
+                                    <option value="instant">Instant</option>
+                                    <option value="hourly">Every hour</option>
+                                    <option value="daily" selected>Daily digest</option>
+                                    <option value="weekly">Weekly digest</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <label>Notification sound</label>
+                                <select id="notification-sound">
+                                    <option value="default">Default</option>
+                                    <option value="gentle">Gentle</option>
+                                    <option value="classic">Classic</option>
+                                    <option value="none">None (silent)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Purchases and Memberships Tab -->
+                    <div class="settings-tab-content" id="purchases-content">
+                        <h3>Purchases and Memberships</h3>
+                        <div class="settings-section">
+                            <div class="empty-state">
+                                <i class="fas fa-shopping-cart fa-3x"></i>
+                                <h4>No purchases yet</h4>
+                                <p>Your purchases and memberships will appear here</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Billing and Payments Tab -->
+                    <div class="settings-tab-content" id="billing-content">
+                        <h3>Billing and Payments</h3>
+                        <div class="settings-section">
+                            <div class="payment-methods">
+                                <h4>Payment methods</h4>
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-plus"></i>
+                                    Add payment method
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Manage All History Tab -->
+                    <div class="settings-tab-content" id="manage-history-content">
+                        <h3>Manage All History</h3>
+                        <div class="settings-section">
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="pause-watch-history">
+                                    Pause watch history
+                                </label>
+                                <p class="setting-description">When paused, videos you watch won't show up in your watch history</p>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="pause-search-history">
+                                    Pause search history
+                                </label>
+                                <p class="setting-description">When paused, searches you make won't show up in your search history</p>
+                            </div>
+                            <div class="history-actions">
+                                <button class="btn btn-secondary">Clear watch history</button>
+                                <button class="btn btn-secondary">Clear search history</button>
+                                <button class="btn btn-danger">Delete all activity</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Your Data in TikTik Tab -->
+                    <div class="settings-tab-content" id="your-data-content">
+                        <h3>Your Data in TikTik</h3>
+                        <div class="settings-section">
+                            <div class="data-info">
+                                <h4>Download your data</h4>
+                                <p>You can download a copy of your content and information from TikTik.</p>
+                                <button class="btn btn-primary">Request download</button>
+                            </div>
+                            <div class="data-info">
+                                <h4>Delete your account</h4>
+                                <p>Permanently delete your TikTik account and all associated data.</p>
+                                <button class="btn btn-danger">Delete account</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Privacy Tab -->
+                    <div class="settings-tab-content" id="privacy-content">
+                        <h3>Privacy</h3>
+                        <div class="settings-section">
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="private-subscriptions">
+                                    Keep all my subscriptions private
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="private-playlists">
+                                    Keep all my saved playlists private
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="private-liked">
+                                    Keep all my liked videos private
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Connected Apps Tab -->
+                    <div class="settings-tab-content" id="connected-apps-content">
+                        <h3>Connected Apps</h3>
+                        <div class="settings-section">
+                            <div class="empty-state">
+                                <i class="fas fa-link fa-3x"></i>
+                                <h4>No connected apps</h4>
+                                <p>Apps you connect to your TikTik account will appear here</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Experimental Features Tab -->
+                    <div class="settings-tab-content" id="experimental-content">
+                        <h3>Try Experimental New Features</h3>
+                        <div class="settings-section">
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="new-ui">
+                                    New user interface
+                                </label>
+                                <p class="setting-description">Try our redesigned interface (beta)</p>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="ai-features">
+                                    AI-powered recommendations
+                                </label>
+                                <p class="setting-description">Enhanced video recommendations using AI</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Video Quality Preferences Tab -->
+                    <div class="settings-tab-content" id="video-quality-content">
+                        <h3>Video Quality Preferences</h3>
+                        <div class="settings-section">
+                            <h4>General Quality Settings</h4>
+                            <div class="setting-item">
+                                <label>Default video quality</label>
+                                <select id="videoQuality">
+                                    <option value="auto">Auto (recommended)</option>
+                                    <option value="2160p">2160p 4K</option>
+                                    <option value="1440p">1440p</option>
+                                    <option value="1080p">1080p</option>
+                                    <option value="720p">720p</option>
+                                    <option value="480p">480p</option>
+                                    <option value="360p">360p</option>
+                                    <option value="240p">240p</option>
+                                    <option value="144p">144p</option>
+                                </select>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="always-choose-quality">
+                                    I have a slow connection. Never play higher-quality video.
+                                </label>
+                                <p class="setting-description">Prevents automatic quality upgrades</p>
+                            </div>
+                            
+                            <h4>Video Quality on Mobile Networks</h4>
+                            <div class="setting-item">
+                                <label>Video quality on mobile data</label>
+                                <select id="mobile-network-quality">
+                                    <option value="auto-mobile">Auto (optimized for mobile)</option>
+                                    <option value="240p">240p (minimal data)</option>
+                                    <option value="360p" selected>360p (low data)</option>
+                                    <option value="480p">480p (standard)</option>
+                                    <option value="720p">720p (high data)</option>
+                                    <option value="1080p">1080p (very high data)</option>
+                                    <option value="same-as-wifi">Same as Wi-Fi setting</option>
+                                </select>
+                                <p class="setting-description">Quality when using cellular/mobile data</p>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>5G network quality</label>
+                                <select id="mobile-5g-quality">
+                                    <option value="auto">Auto (optimized for 5G)</option>
+                                    <option value="720p">720p</option>
+                                    <option value="1080p" selected>1080p</option>
+                                    <option value="1440p">1440p</option>
+                                    <option value="2160p">2160p 4K</option>
+                                    <option value="same-as-wifi">Same as Wi-Fi setting</option>
+                                </select>
+                                <p class="setting-description">Higher quality available on 5G networks</p>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>4G/LTE network quality</label>
+                                <select id="mobile-4g-quality">
+                                    <option value="auto">Auto (optimized for 4G)</option>
+                                    <option value="360p">360p</option>
+                                    <option value="480p" selected>480p</option>
+                                    <option value="720p">720p</option>
+                                    <option value="1080p">1080p</option>
+                                </select>
+                                <p class="setting-description">Quality for 4G/LTE connections</p>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>3G network quality</label>
+                                <select id="mobile-3g-quality">
+                                    <option value="240p" selected>240p</option>
+                                    <option value="360p">360p</option>
+                                    <option value="480p">480p</option>
+                                </select>
+                                <p class="setting-description">Quality for slower 3G connections</p>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="mobile-hd-warning" checked>
+                                    Warn before playing HD on mobile data
+                                </label>
+                                <p class="setting-description">Show warning when trying to play HD quality on mobile data</p>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="mobile-auto-pause">
+                                    Auto-pause when switching to mobile data
+                                </label>
+                                <p class="setting-description">Automatically pause video when switching from Wi-Fi to mobile data</p>
+                            </div>
+                            
+                            <h4>Video Quality on Wi-Fi</h4>
+                            <div class="setting-item">
+                                <label>Video quality on Wi-Fi</label>
+                                <select id="wifi-quality">
+                                    <option value="auto" selected>Auto (best available)</option>
+                                    <option value="2160p">2160p 4K</option>
+                                    <option value="1440p">1440p</option>
+                                    <option value="1080p">1080p</option>
+                                    <option value="720p">720p</option>
+                                    <option value="480p">480p</option>
+                                    <option value="360p">360p</option>
+                                </select>
+                                <p class="setting-description">Quality when connected to Wi-Fi networks</p>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>Wi-Fi speed detection</label>
+                                <select id="wifi-speed-detection">
+                                    <option value="auto" selected>Auto-detect Wi-Fi speed</option>
+                                    <option value="fast">Assume fast Wi-Fi (>25 Mbps)</option>
+                                    <option value="medium">Assume medium Wi-Fi (5-25 Mbps)</option>
+                                    <option value="slow">Assume slow Wi-Fi (<5 Mbps)</option>
+                                </select>
+                                <p class="setting-description">How to handle different Wi-Fi speeds</p>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="wifi-auto-upgrade" checked>
+                                    Auto-upgrade quality on fast Wi-Fi
+                                </label>
+                                <p class="setting-description">Automatically increase quality when fast Wi-Fi is detected</p>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="wifi-unlimited-quality">
+                                    Allow unlimited quality on Wi-Fi
+                                </label>
+                                <p class="setting-description">No restrictions on video quality when using Wi-Fi</p>
+                            </div>
+                            
+                            <h4>Advanced Quality Settings</h4>
+                            <div class="setting-item">
+                                <label>Quality adjustment sensitivity</label>
+                                <select id="quality-sensitivity">
+                                    <option value="conservative">Conservative (fewer changes)</option>
+                                    <option value="normal" selected>Normal</option>
+                                    <option value="aggressive">Aggressive (quick adaptation)</option>
+                                </select>
+                                <p class="setting-description">How quickly quality adapts to network changes</p>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>Minimum quality threshold</label>
+                                <select id="min-quality-threshold">
+                                    <option value="144p">144p</option>
+                                    <option value="240p" selected>240p</option>
+                                    <option value="360p">360p</option>
+                                    <option value="480p">480p</option>
+                                </select>
+                                <p class="setting-description">Never go below this quality</p>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>Maximum quality limit</label>
+                                <select id="max-quality-limit">
+                                    <option value="unlimited" selected>Unlimited</option>
+                                    <option value="2160p">2160p 4K</option>
+                                    <option value="1440p">1440p</option>
+                                    <option value="1080p">1080p</option>
+                                    <option value="720p">720p</option>
+                                </select>
+                                <p class="setting-description">Never exceed this quality</p>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="quality-startup-optimization">
+                                    Optimize quality for fast startup
+                                </label>
+                                <p class="setting-description">Start with lower quality for faster loading, then upgrade</p>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>Buffer quality ahead</label>
+                                <select id="buffer-quality">
+                                    <option value="same">Same quality as current</option>
+                                    <option value="lower">Lower quality for faster buffering</option>
+                                    <option value="adaptive" selected">Adaptive based on speed</option>
+                                </select>
+                                <p class="setting-description">Quality used for buffering ahead</p>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="quality-preview-mode">
+                                    Enable quality preview
+                                </label>
+                                <p class="setting-description">Show quality indicator and allow manual adjustment during playback</p>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>Network type priority</label>
+                                <div class="network-priority-list">
+                                    <div class="priority-item">
+                                        <span>1. Wi-Fi (highest quality)</span>
+                                        <span class="quality-indicator">Up to 4K</span>
+                                    </div>
+                                    <div class="priority-item">
+                                        <span>2. 5G (high quality)</span>
+                                        <span class="quality-indicator">Up to 1080p</span>
+                                    </div>
+                                    <div class="priority-item">
+                                        <span>3. 4G/LTE (medium quality)</span>
+                                        <span class="quality-indicator">Up to 720p</span>
+                                    </div>
+                                    <div class="priority-item">
+                                        <span>4. 3G (low quality)</span>
+                                        <span class="quality-indicator">Up to 360p</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <button class="btn btn-secondary" id="reset-quality-settings">Reset quality settings</button>
+                                <button class="btn btn-secondary" id="test-connection-speed">Test connection speed</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Playback Tab -->
+                    <div class="settings-tab-content" id="playback-content">
+                        <h3>Playback</h3>
+                        <div class="settings-section">
+                            <h4>Autoplay Settings</h4>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="autoplayToggle" checked>
+                                    Autoplay next video
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="autoplay-on-home">
+                                    Autoplay on Home
+                                </label>
+                            </div>
+                            
+                            <h4>Player Controls</h4>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="double-tap-seek" checked>
+                                    Double-tap to seek
+                                </label>
+                                <p class="setting-description">Double-tap left or right to seek 10 seconds</p>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="zoom-to-fill">
+                                    Zoom to fill screen
+                                </label>
+                                <p class="setting-description">Automatically zoom videos to fill the screen</p>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="ambient-mode">
+                                    Ambient mode
+                                </label>
+                                <p class="setting-description">Dims the lights around the video</p>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="theater-mode">
+                                    Theater mode
+                                </label>
+                                <p class="setting-description">Expand video to theater view</p>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="miniplayer-auto">
+                                    Miniplayer
+                                </label>
+                                <p class="setting-description">Play videos in a small player while browsing</p>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="picture-in-picture">
+                                    Picture-in-picture
+                                </label>
+                                <p class="setting-description">Play videos in a floating window</p>
+                            </div>
+                            
+                            <h4>Playback Speed</h4>
+                            <div class="setting-item">
+                                <label>Default playback speed</label>
+                                <select id="playback-speed">
+                                    <option value="0.25">0.25x</option>
+                                    <option value="0.5">0.5x</option>
+                                    <option value="0.75">0.75x</option>
+                                    <option value="1" selected>Normal (1x)</option>
+                                    <option value="1.25">1.25x</option>
+                                    <option value="1.5">1.5x</option>
+                                    <option value="1.75">1.75x</option>
+                                    <option value="2">2x</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <label>Seek duration</label>
+                                <select id="seek-duration">
+                                    <option value="5">5 seconds</option>
+                                    <option value="10" selected>10 seconds</option>
+                                    <option value="15">15 seconds</option>
+                                    <option value="30">30 seconds</option>
+                                </select>
+                            </div>
+                            
+                            <h4>Audio Settings</h4>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="stable-volume">
+                                    Stable volume
+                                </label>
+                                <p class="setting-description">Reduce loud sounds and boost quiet sounds</p>
+                            </div>
+                            <div class="setting-item">
+                                <label>Volume normalization</label>
+                                <input type="range" id="volume-normalization" min="0" max="100" value="80">
+                                <p class="setting-description">Automatically adjust volume levels</p>
+                            </div>
+                            
+                            <h4>Interaction</h4>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="annotations">
+                                    Show annotations and end screens on videos
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="gesture-controls">
+                                    Gesture controls
+                                </label>
+                                <p class="setting-description">Use swipe gestures to control playback</p>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="speed-controls">
+                                    Show playback speed controls
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Captions Tab -->
+                    <div class="settings-tab-content" id="captions-content">
+                        <h3>Captions</h3>
+                        <div class="settings-section">
+                            <h4>Caption Preferences</h4>
+                            <div class="caption-preview-image">
+                                <img src="https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?w=400&h=200&fit=crop" alt="Caption Preview" style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px; margin-bottom: 16px;">
+                                <div class="caption-overlay">
+                                    <span class="sample-caption">Sample caption text appears here</span>
+                                </div>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <div class="caption-toggle">
+                                    <button class="btn caption-btn active" id="captions-on">
+                                        <i class="fas fa-closed-captioning"></i>
+                                        Captions ON
+                                    </button>
+                                    <button class="btn caption-btn" id="captions-off">
+                                        <i class="fas fa-closed-captioning"></i>
+                                        Captions OFF
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="show-captions" checked>
+                                    Always show captions
+                                </label>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>Caption language</label>
+                                <select id="caption-language">
+                                    <option value="auto">Auto-generated</option>
+                                    <option value="en">English</option>
+                                    <option value="hi">Hindi</option>
+                                    <option value="es">Spanish</option>
+                                    <option value="fr">French</option>
+                                    <option value="de">German</option>
+                                    <option value="ja">Japanese</option>
+                                </select>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>Caption size</label>
+                                <select id="caption-size">
+                                    <option value="small">Small</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="large">Large</option>
+                                    <option value="extra-large">Extra Large</option>
+                                </select>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>Caption style</label>
+                                <select id="caption-style">
+                                    <option value="default">Default</option>
+                                    <option value="outlined">Outlined</option>
+                                    <option value="drop-shadow">Drop shadow</option>
+                                    <option value="background">Background</option>
+                                </select>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>Caption font</label>
+                                <select id="caption-font">
+                                    <option value="default">Default</option>
+                                    <option value="serif">Serif</option>
+                                    <option value="sans-serif">Sans Serif</option>
+                                    <option value="monospace">Monospace</option>
+                                    <option value="casual">Casual</option>
+                                    <option value="cursive">Cursive</option>
+                                </select>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>Caption color</label>
+                                <select id="caption-color">
+                                    <option value="white">White</option>
+                                    <option value="yellow">Yellow</option>
+                                    <option value="green">Green</option>
+                                    <option value="cyan">Cyan</option>
+                                    <option value="blue">Blue</option>
+                                    <option value="magenta">Magenta</option>
+                                    <option value="red">Red</option>
+                                    <option value="black">Black</option>
+                                </select>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>Background color</label>
+                                <select id="caption-bg-color">
+                                    <option value="black">Black</option>
+                                    <option value="white">White</option>
+                                    <option value="red">Red</option>
+                                    <option value="green">Green</option>
+                                    <option value="blue">Blue</option>
+                                    <option value="yellow">Yellow</option>
+                                    <option value="magenta">Magenta</option>
+                                    <option value="cyan">Cyan</option>
+                                    <option value="transparent">Transparent</option>
+                                </select>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>Background opacity</label>
+                                <input type="range" id="caption-bg-opacity" min="0" max="100" value="75">
+                                <span id="opacity-value">75%</span>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>Window color</label>
+                                <select id="caption-window-color">
+                                    <option value="black">Black</option>
+                                    <option value="white">White</option>
+                                    <option value="red">Red</option>
+                                    <option value="green">Green</option>
+                                    <option value="blue">Blue</option>
+                                    <option value="yellow">Yellow</option>
+                                    <option value="magenta">Magenta</option>
+                                    <option value="cyan">Cyan</option>
+                                </select>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>Window opacity</label>
+                                <input type="range" id="caption-window-opacity" min="0" max="100" value="0">
+                                <span id="window-opacity-value">0%</span>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>Character edge style</label>
+                                <select id="caption-edge-style">
+                                    <option value="none">None</option>
+                                    <option value="raised">Raised</option>
+                                    <option value="depressed">Depressed</option>
+                                    <option value="uniform">Uniform</option>
+                                    <option value="drop-shadow-left">Drop shadow left</option>
+                                    <option value="drop-shadow-right">Drop shadow right</option>
+                                </select>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <button class="btn btn-secondary" id="reset-captions">Reset to defaults</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Data Saving Tab -->
+                    <div class="settings-tab-content" id="data-saving-content">
+                        <h3>Data Saving</h3>
+                        <div class="settings-section">
+                            <h4>Data Usage Controls</h4>
+                            <div class="setting-item">
+                                <div class="data-saver-toggle">
+                                    <button class="toggle-btn" id="data-saver-main">
+                                        <span class="toggle-status">OFF</span>
+                                        Data saver
+                                    </button>
+                                    <p class="setting-description">Reduces data usage by lowering video quality and limiting background activity</p>
+                                </div>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>Data usage limit</label>
+                                <select id="data-usage-limit">
+                                    <option value="unlimited">Unlimited</option>
+                                    <option value="5gb">5 GB per month</option>
+                                    <option value="10gb">10 GB per month</option>
+                                    <option value="15gb">15 GB per month</option>
+                                    <option value="20gb">20 GB per month</option>
+                                    <option value="custom">Custom limit</option>
+                                </select>
+                            </div>
+                            
+                            <div class="setting-item" id="custom-limit-input" style="display: none;">
+                                <label>Custom data limit (GB)</label>
+                                <input type="number" id="custom-data-limit" min="1" max="100" value="10">
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>Data usage tracking</label>
+                                <div class="data-usage-display">
+                                    <div class="usage-meter">
+                                        <div class="usage-bar">
+                                            <div class="usage-fill" style="width: 45%;"></div>
+                                        </div>
+                                        <span class="usage-text">4.5 GB used of 10 GB this month</span>
+                                    </div>
+                                    <button class="btn btn-secondary btn-small" id="reset-data-usage">Reset usage data</button>
+                                </div>
+                            </div>
+                            
+                            <h4>Video Quality Settings</h4>
+                            <div class="setting-item">
+                                <label>Video quality on mobile data</label>
+                                <select id="mobile-video-quality">
+                                    <option value="auto">Auto (data saver)</option>
+                                    <option value="240p">240p</option>
+                                    <option value="360p" selected>360p</option>
+                                    <option value="480p">480p</option>
+                                    <option value="720p">720p</option>
+                                    <option value="1080p">1080p</option>
+                                </select>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="pause-on-mobile" checked>
+                                    Pause video on mobile data when screen is off
+                                </label>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="reduce-thumbnails">
+                                    Use lower quality thumbnails on mobile data
+                                </label>
+                            </div>
+                            
+                            <h4>Background Activity</h4>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="limit-background-data">
+                                    Limit background data usage
+                                </label>
+                                <p class="setting-description">Reduces data usage when app is in background</p>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="wifi-only-sync">
+                                    Sync only on Wi-Fi
+                                </label>
+                                <p class="setting-description">Sync watch history, likes, and subscriptions only when connected to Wi-Fi</p>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="preload-wifi-only">
+                                    Preload videos only on Wi-Fi
+                                </label>
+                                <p class="setting-description">Only preload next videos when connected to Wi-Fi</p>
+                            </div>
+                            
+                            <h4>Smart Downloads</h4>
+                            <div class="setting-item">
+                                <div class="toggle-button-group">
+                                    <button class="toggle-btn" id="smart-downloads-btn">
+                                        <span class="toggle-status">OFF</span>
+                                        Smart downloads
+                                    </button>
+                                    <p class="setting-description">Automatically download videos for offline viewing based on your interests</p>
+                                </div>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>Download quality for smart downloads</label>
+                                <select id="smart-download-quality">
+                                    <option value="480p" selected>480p (recommended)</option>
+                                    <option value="360p">360p (lower data usage)</option>
+                                    <option value="720p">720p (higher quality)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>Smart downloads storage limit</label>
+                                <select id="smart-download-limit">
+                                    <option value="500mb">500 MB</option>
+                                    <option value="1gb" selected>1 GB</option>
+                                    <option value="2gb">2 GB</option>
+                                    <option value="5gb">5 GB</option>
+                                    <option value="10gb">10 GB</option>
+                                </select>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="download-subscriptions-only">
+                                    Only download from subscribed channels
+                                </label>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="download-when-charging">
+                                    Download only when device is charging
+                                </label>
+                            </div>
+                            
+                            <h4>Network Preferences</h4>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="avoid-roaming">
+                                    Avoid data usage when roaming
+                                </label>
+                                <p class="setting-description">Automatically enable data saver when roaming</p>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>Preferred network quality</label>
+                                <select id="network-quality-preference">
+                                    <option value="quality">Prioritize quality</option>
+                                    <option value="balanced" selected>Balanced</option>
+                                    <option value="speed">Prioritize loading speed</option>
+                                    <option value="data-saving">Prioritize data saving</option>
+                                </select>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <button class="btn btn-secondary" id="view-data-usage-details">View detailed data usage</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Downloads Tab -->
+                    <div class="settings-tab-content" id="downloads-content">
+                        <h3>Downloads</h3>
+                        <div class="settings-section">
+                            <div class="setting-item">
+                                <label>Download quality</label>
+                                <select id="download-quality">
+                                    <option value="720p">720p</option>
+                                    <option value="480p" selected>480p</option>
+                                    <option value="360p">360p</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="download-on-wifi">
+                                    Only download on Wi-Fi
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Live Chat Tab -->
+                    <div class="settings-tab-content" id="live-chat-content">
+                        <h3>Live Chat</h3>
+                        <div class="settings-section">
+                            <h4>Basic Settings</h4>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="live-chat-enabled" checked>
+                                    Enable live chat
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="chat-filter">
+                                    Filter potentially inappropriate messages
+                                </label>
+                            </div>
+                            
+                            <h4>Moderation Settings</h4>
+                            <div class="setting-item">
+                                <div class="toggle-button-group">
+                                    <button class="toggle-btn" id="hold-for-review-btn">
+                                        <span class="toggle-status">OFF</span>
+                                        Hold for review
+                                    </button>
+                                    <p class="setting-description">Hold potentially inappropriate messages for review before they appear in chat</p>
+                                </div>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <div class="toggle-button-group">
+                                    <button class="toggle-btn" id="leaderboard-participation-btn">
+                                        <span class="toggle-status">ON</span>
+                                        Leaderboard participation
+                                    </button>
+                                    <p class="setting-description">Allow viewers to participate in chat leaderboards and ranking</p>
+                                </div>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <div class="toggle-button-group">
+                                    <button class="toggle-btn active" id="super-chat-btn">
+                                        <span class="toggle-status">ON</span>
+                                        Super Chat
+                                    </button>
+                                    <p class="setting-description">Allow viewers to pay to highlight their messages in chat</p>
+                                </div>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <div class="toggle-button-group">
+                                    <button class="toggle-btn active" id="super-stickers-btn">
+                                        <span class="toggle-status">ON</span>
+                                        Super Stickers celebrations
+                                    </button>
+                                    <p class="setting-description">Show animated celebrations when viewers send Super Stickers</p>
+                                </div>
+                            </div>
+                            
+                            <h4>Chat Display</h4>
+                            <div class="setting-item">
+                                <label>Chat font size</label>
+                                <select id="chat-font-size">
+                                    <option value="small">Small</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="large">Large</option>
+                                </select>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="show-timestamps" checked>
+                                    Show timestamps in chat
+                                </label>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="show-user-badges" checked>
+                                    Show user badges and membership status
+                                </label>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="chat-sound-notifications">
+                                    Play sound for new messages
+                                </label>
+                            </div>
+                            
+                            <h4>Slow Mode</h4>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="slow-mode">
+                                    Enable slow mode
+                                </label>
+                                <p class="setting-description">Limit how often viewers can send messages</p>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>Slow mode duration</label>
+                                <select id="slow-mode-duration">
+                                    <option value="5">5 seconds</option>
+                                    <option value="10">10 seconds</option>
+                                    <option value="30" selected>30 seconds</option>
+                                    <option value="60">1 minute</option>
+                                    <option value="120">2 minutes</option>
+                                    <option value="300">5 minutes</option>
+                                </select>
+                            </div>
+                            
+                            <h4>Subscriber-only Mode</h4>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="subscriber-only">
+                                    Subscriber-only chat
+                                </label>
+                                <p class="setting-description">Only subscribers can send messages</p>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>Minimum subscription duration</label>
+                                <select id="min-subscription">
+                                    <option value="0">No minimum</option>
+                                    <option value="1">1 day</option>
+                                    <option value="7">1 week</option>
+                                    <option value="30">1 month</option>
+                                    <option value="90">3 months</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Accessibility Tab -->
+                    <div class="settings-tab-content" id="accessibility-content">
+                        <h3>Accessibility</h3>
+                        <div class="settings-section">
+                            <h4>Visual Accessibility</h4>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="high-contrast">
+                                    High contrast mode
+                                </label>
+                                <p class="setting-description">Increase contrast for better visibility</p>
+                            </div>
+                            <div class="setting-item">
+                                <label>Font size</label>
+                                <input type="range" id="font-size" min="12" max="24" value="16">
+                                <span id="font-size-value">16px</span>
+                                <p class="setting-description">Adjust text size throughout the app</p>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="dark-text">
+                                    Force dark text
+                                </label>
+                                <p class="setting-description">Always use dark text on light backgrounds</p>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="reduce-transparency">
+                                    Reduce transparency
+                                </label>
+                                <p class="setting-description">Make interface elements more opaque</p>
+                            </div>
+                            
+                            <h4>Motion and Animation</h4>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="reduce-motion">
+                                    Reduce motion
+                                </label>
+                                <p class="setting-description">Minimize animations and transitions</p>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="autoplay-gifs">
+                                    Autoplay animated images
+                                </label>
+                                <p class="setting-description">Automatically play GIFs and animated content</p>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="flash-reduction">
+                                    Reduce flashing
+                                </label>
+                                <p class="setting-description">Filter content with rapid flashing</p>
+                            </div>
+                            
+                            <h4>Navigation</h4>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="keyboard-navigation">
+                                    Enhanced keyboard navigation
+                                </label>
+                                <p class="setting-description">Improve navigation using only keyboard</p>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="focus-indicators">
+                                    Enhanced focus indicators
+                                </label>
+                                <p class="setting-description">Make focused elements more visible</p>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="skip-links">
+                                    Skip navigation links
+                                </label>
+                                <p class="setting-description">Add links to skip repetitive navigation</p>
+                            </div>
+                            
+                            <h4>Screen Reader Support</h4>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="screen-reader">
+                                    Screen reader optimizations
+                                </label>
+                                <p class="setting-description">Optimize interface for screen readers</p>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="detailed-descriptions">
+                                    Detailed descriptions
+                                </label>
+                                <p class="setting-description">Include detailed descriptions of visual content</p>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="landmark-navigation">
+                                    Landmark navigation
+                                </label>
+                                <p class="setting-description">Add ARIA landmarks for easier navigation</p>
+                            </div>
+                            
+                            <h4>Motor Accessibility</h4>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="large-click-targets">
+                                    Large click targets
+                                </label>
+                                <p class="setting-description">Make buttons and links larger and easier to click</p>
+                            </div>
+                            <div class="setting-item">
+                                <label>Click delay</label>
+                                <select id="click-delay">
+                                    <option value="0">None</option>
+                                    <option value="250">250ms</option>
+                                    <option value="500">500ms</option>
+                                    <option value="1000">1 second</option>
+                                </select>
+                                <p class="setting-description">Add delay to prevent accidental clicks</p>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="sticky-hover">
+                                    Sticky hover
+                                </label>
+                                <p class="setting-description">Keep hover states active until clicked elsewhere</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Watch on TV Tab -->
+                    <div class="settings-tab-content" id="watch-tv-content">
+                        <h3>Watch on TV</h3>
+                        <div class="settings-section">
+                            <div class="tv-connection-container">
+                                <div class="tv-status" id="tv-status">
+                                    <i class="fas fa-tv fa-3x"></i>
+                                    <h4>No TVs found</h4>
+                                    <p>Make sure your TV and device are connected to the same Wi-Fi network</p>
+                                </div>
+                                
+                                <div class="tv-connection-methods">
+                                    <h4>Connection Methods</h4>
+                                    
+                                    <div class="connection-method">
+                                        <div class="method-header">
+                                            <i class="fas fa-search"></i>
+                                            <h5>Automatic Detection</h5>
+                                        </div>
+                                        <p>Searching for compatible devices on your network...</p>
+                                        <button class="btn btn-primary" id="scan-for-tvs">
+                                            <i class="fas fa-sync-alt"></i>
+                                            Scan again
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="connection-method">
+                                        <div class="method-header">
+                                            <i class="fas fa-code"></i>
+                                            <h5>Link with TV code</h5>
+                                        </div>
+                                        <p>If your TV shows a code, enter it here</p>
+                                        <div class="tv-code-input">
+                                            <input type="text" id="tv-code-input" placeholder="Enter TV code" maxlength="12">
+                                            <button class="btn btn-primary" id="connect-with-code">Connect</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="connection-method">
+                                        <div class="method-header">
+                                            <i class="fas fa-keyboard"></i>
+                                            <h5>Enter TV code manually</h5>
+                                        </div>
+                                        <p>Enter the pairing code shown on your TV screen</p>
+                                        <div class="manual-code-grid">
+                                            <input type="text" class="code-digit" maxlength="1">
+                                            <input type="text" class="code-digit" maxlength="1">
+                                            <input type="text" class="code-digit" maxlength="1">
+                                            <span class="code-separator">-</span>
+                                            <input type="text" class="code-digit" maxlength="1">
+                                            <input type="text" class="code-digit" maxlength="1">
+                                            <input type="text" class="code-digit" maxlength="1">
+                                            <span class="code-separator">-</span>
+                                            <input type="text" class="code-digit" maxlength="1">
+                                            <input type="text" class="code-digit" maxlength="1">
+                                            <input type="text" class="code-digit" maxlength="1">
+                                        </div>
+                                        <button class="btn btn-primary" id="connect-manual-code">Connect with code</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="tv-help-section">
+                                    <h4>Can't find your TV?</h4>
+                                    <div class="help-options">
+                                        <button class="btn btn-secondary" id="tv-troubleshoot">
+                                            <i class="fas fa-question-circle"></i>
+                                            Get help
+                                        </button>
+                                        <button class="btn btn-secondary" id="tv-requirements">
+                                            <i class="fas fa-info-circle"></i>
+                                            System requirements
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="troubleshoot-tips" id="troubleshoot-tips" style="display: none;">
+                                        <h5>Troubleshooting Tips:</h5>
+                                        <ul>
+                                            <li>Make sure your TV supports casting (Chromecast, AirPlay, or Miracast)</li>
+                                            <li>Ensure both devices are on the same Wi-Fi network</li>
+                                            <li>Check if your TV's casting feature is enabled</li>
+                                            <li>Try restarting your TV and router</li>
+                                            <li>Make sure TikTik app is up to date</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div class="tv-requirements-info" id="tv-requirements-info" style="display: none;">
+                                        <h5>Compatible Devices:</h5>
+                                        <ul>
+                                            <li>Smart TVs with built-in casting</li>
+                                            <li>Chromecast or Chromecast built-in</li>
+                                            <li>Apple TV (AirPlay)</li>
+                                            <li>Samsung Smart TV (2016 or later)</li>
+                                            <li>LG Smart TV (webOS 3.0 or later)</li>
+                                            <li>Android TV devices</li>
+                                            <li>Amazon Fire TV</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+                                <div class="connected-devices" id="connected-devices" style="display: none;">
+                                    <h4>Connected Devices</h4>
+                                    <div class="device-list" id="device-list">
+                                        <!-- Connected devices will appear here -->
+                                    </div>
+                                </div>
+                                
+                                <div class="tv-settings" id="tv-settings" style="display: none;">
+                                    <h4>TV Settings</h4>
+                                    <div class="setting-item">
+                                        <label>Video quality on TV</label>
+                                        <select id="tv-video-quality">
+                                            <option value="auto">Auto (recommended)</option>
+                                            <option value="4k">4K (Ultra HD)</option>
+                                            <option value="1080p">1080p (Full HD)</option>
+                                            <option value="720p">720p (HD)</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="setting-item">
+                                        <label>
+                                            <input type="checkbox" id="tv-keep-screen-on" checked>
+                                            Keep phone screen on while casting
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="setting-item">
+                                        <label>
+                                            <input type="checkbox" id="tv-show-captions" checked>
+                                            Show captions on TV
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="setting-item">
+                                        <label>
+                                            <input type="checkbox" id="tv-auto-connect">
+                                            Automatically connect to nearby TVs
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Help Tab -->
+                    <div class="settings-tab-content" id="help-content">
+                        <h3>Help</h3>
+                        <div class="settings-section">
+                            <div class="help-links">
+                                <a href="#" class="help-link">
+                                    <i class="fas fa-question-circle"></i>
+                                    <span>Help Center</span>
+                                </a>
+                                <a href="#" class="help-link">
+                                    <i class="fas fa-comments"></i>
+                                    <span>Community Guidelines</span>
+                                </a>
+                                <a href="#" class="help-link">
+                                    <i class="fas fa-shield-alt"></i>
+                                    <span>Safety Center</span>
+                                </a>
+                                <a href="#" class="help-link">
+                                    <i class="fas fa-book"></i>
+                                    <span>Creator Resources</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Terms of Service Tab -->
+                    <div class="settings-tab-content" id="terms-content">
+                        <h3>TikTik Terms of Service</h3>
+                        <div class="settings-section">
+                            <div class="terms-content">
+                                <p>Last updated: January 2024</p>
+                                <h4>1. Acceptance of Terms</h4>
+                                <p>By using TikTik, you agree to these terms and conditions...</p>
+                                <h4>2. Use of Service</h4>
+                                <p>You may use our service for lawful purposes only...</p>
+                                <h4>3. User Content</h4>
+                                <p>You retain ownership of content you upload to TikTik...</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Send Feedback Tab -->
+                    <div class="settings-tab-content" id="send-feedback-content">
+                        <h3>Send Feedback</h3>
+                        <div class="settings-section">
+                            <div class="feedback-form">
+                                <div class="form-group">
+                                    <label>Feedback category</label>
+                                    <select id="feedback-category">
+                                        <option value="bug">Report a bug</option>
+                                        <option value="feature">Request a feature</option>
+                                        <option value="general">General feedback</option>
+                                        <option value="content">Content issues</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Your feedback</label>
+                                    <textarea id="feedback-text" placeholder="Tell us what you think..."></textarea>
+                                </div>
+                                <button class="btn btn-primary">Send feedback</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- About Tab -->
+                    <div class="settings-tab-content" id="about-content">
+                        <h3>About TikTik</h3>
+                        <div class="settings-section">
+                            <div class="about-info">
+                                <div class="app-info">
+                                    <h4>TikTik</h4>
+                                    <p>Version 1.0.0</p>
+                                    <p>© 2024 TikTik Inc. All rights reserved.</p>
+                                </div>
+                                <div class="app-links">
+                                    <a href="#" class="about-link">Privacy Policy</a>
+                                    <a href="#" class="about-link">Terms of Service</a>
+                                    <a href="#" class="about-link">Open Source Licenses</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page" id="helpPage">
+            <h2>Help & Support</h2>
+            <div class="help-container">
+                <div class="help-section">
+                    <h3>Frequently Asked Questions</h3>
+                    <p>Need help using TikTik? Check our help center for answers.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="page" id="feedbackPage">
+            <h2>Send Feedback</h2>
+            <div class="feedback-container">
+                <div class="feedback-section">
+                    <h3>Help us improve TikTik</h3>
+                    <p>Your feedback helps us make TikTik better for everyone.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Video Player Modal -->
+    <div class="video-modal" id="videoModal">
+        <div class="video-modal-content">
+            <button class="close-btn" id="closeVideoBtn">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="video-player-container">
+                <video class="video-player" id="videoPlayer">
+                    <source src="" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                
+                <!-- Navigation Arrows -->
+                <button class="nav-arrow prev" id="prevVideoBtn" title="Previous video">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="nav-arrow next" id="nextVideoBtn" title="Next video">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                
+                <!-- Player State Controls -->
+                <div class="player-state-controls">
+                    <button class="state-btn" id="minimizeBtn" title="Minimize">
+                        <i class="fas fa-compress"></i>
+                    </button>
+                    <button class="state-btn" id="theaterBtn" title="Theater mode">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                    <button class="state-btn" id="fullscreenBtn" title="Fullscreen">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </button>
+                </div>
+                
+                <!-- Video Controls - YouTube Style -->
+                <div class="video-controls" id="videoControls">
+                    <!-- Progress bar at top -->
+                    <div class="progress-bar" id="progressBar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    
+                    <!-- Main controls row -->
+                    <div class="controls-row">
+                        <!-- Left side controls -->
+                        <div class="controls-left">
+                            <button class="control-btn large" id="playPauseBtn" title="Play/Pause (k)">
+                                <i class="fas fa-play"></i>
+                            </button>
+                            
+                            <button class="control-btn" id="nextVideoBtn" title="Next video">
+                                <i class="fas fa-step-forward"></i>
+                            </button>
+                            
+                            <div class="volume-control">
+                                <button class="control-btn" id="muteBtn" title="Mute (m)">
+                                    <i class="fas fa-volume-up"></i>
+                                </button>
+                                <div class="volume-slider" id="volumeSlider">
+                                    <div class="volume-fill" id="volumeFill"></div>
+                                </div>
+                            </div>
+                            
+                            <span class="time-display" id="timeDisplay">0:00 / 0:00</span>
+                        </div>
+                        
+                        <!-- Right side controls -->
+                        <div class="controls-right">
+                            <div class="autoplay-indicator">
+                                <span>Autoplay</span>
+                                <div class="autoplay-toggle active" id="autoplayToggleBtn" title="Autoplay is on"></div>
+                            </div>
+                            
+                            <button class="control-btn captions-btn" id="captionsBtn" title="Captions (c)">
+                                <i class="fas fa-closed-captioning"></i>
+                            </button>
+                            
+                            <div class="settings-menu">
+                                <button class="control-btn" id="settingsBtn" title="Settings">
+                                    <i class="fas fa-cog"></i>
+                                </button>
+                                <div class="settings-dropdown" id="settingsDropdown">
+                                    <div class="settings-item" data-setting="quality">
+                                        <span>Quality</span>
+                                        <span id="currentQuality">Auto</span>
+                                    </div>
+                                    <div class="settings-item" data-setting="speed">
+                                        <span>Playback speed</span>
+                                        <span id="currentSpeed">Normal</span>
+                                    </div>
+                                    <div class="settings-item" data-setting="captions">
+                                        <span>Subtitles/CC</span>
+                                        <span id="captionsStatus">Off</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button class="control-btn" id="miniplayerBtn" title="Miniplayer (i)">
+                                <i class="fas fa-external-link-alt"></i>
+                            </button>
+                            
+                            <button class="control-btn" id="theaterModeBtn" title="Cinema mode (t)">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                            
+                            <button class="control-btn" id="fullscreenBtn" title="Fullscreen (f)">
+                                <i class="fas fa-expand-arrows-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Miniplayer Controls -->
+                <div class="miniplayer-controls" id="miniplayerControls">
+                    <div class="miniplayer-title" id="miniplayerTitle">Video Title</div>
+                    <button class="miniplayer-btn" id="miniplayerPlayBtn">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="miniplayer-btn" id="restoreBtn" title="Restore">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="video-info">
+                <h3 class="video-title" id="modalVideoTitle"></h3>
+                <div class="video-meta">
+                    <div class="channel-info">
+                        <img class="channel-avatar" id="modalChannelAvatar" src="" alt="Channel Avatar">
+                        <div class="channel-details">
+                            <span class="channel-name" id="modalChannelName"></span>
+                            <span class="video-stats" id="modalVideoStats"></span>
+                        </div>
+                        <div class="subscribe-section">
+                            <button class="subscribe-btn" id="subscribeBtn">
+                                <span class="subscribe-text">Subscribe</span>
+                            </button>
+                            <div style="position: relative;">
+                                <button class="notification-btn" id="notificationBtn" style="display: none;" title="Notification preferences">
+                                    <i class="fas fa-bell"></i>
+                                </button>
+                                <div class="notification-dropdown" id="notificationDropdown">
+                                    <div class="notification-option" data-value="all">
+                                        <i class="fas fa-bell"></i>
+                                        <span>All</span>
+                                    </div>
+                                    <div class="notification-option" data-value="personalized">
+                                        <i class="fas fa-bell-slash"></i>
+                                        <span>Personalized</span>
+                                    </div>
+                                    <div class="notification-option" data-value="none">
+                                        <i class="fas fa-bell-slash"></i>
+                                        <span>None</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="video-actions">
+                        <button class="action-btn like-btn" id="likeBtn">
+                            <i class="fas fa-thumbs-up"></i>
+                            <span id="likeCount">0</span>
+                        </button>
+                        <button class="action-btn dislike-btn" id="dislikeBtn">
+                            <i class="fas fa-thumbs-down"></i>
+                        </button>
+                        <button class="action-btn share-btn" id="shareBtn">
+                            <i class="fas fa-share"></i>
+                            Share
+                        </button>
+                        <button class="action-btn save-btn" id="saveBtn">
+                            <i class="fas fa-bookmark"></i>
+                            Save
+                        </button>
+                        <button class="action-btn download-btn" id="downloadBtn">
+                            <i class="fas fa-download"></i>
+                            Download
+                        </button>
+                    </div>
+                </div>
+                <div class="video-description" id="modalVideoDescription"></div>
+                
+                <!-- Comments Section -->
+                <div class="comments-section">
+                    <div class="comments-header">
+                        <h4>Comments <span id="commentCount">247</span></h4>
+                        <div class="sort-comments">
+                            <select id="commentSort">
+                                <option value="top">Top comments</option>
+                                <option value="newest">Newest first</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="add-comment">
+                        <img class="user-avatar-small" src="https://pixabay.com/get/g1882a617f55023cde87198feea9e830686b0a69ae7f315295cebe2b111a575a3d2dd94672359c9d34b332edd722a8e7d502b680acae2e35040353fd2a2ee0f9a_1280.jpg" alt="Your Avatar">
+                        <div class="comment-input-container">
+                            <input type="text" id="commentInput" placeholder="Add a comment..." />
+                            <div class="comment-actions" style="display: none;">
+                                <button class="btn-cancel" id="cancelComment">Cancel</button>
+                                <button class="btn-comment" id="submitComment">Comment</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="comments-list" id="commentsList">
+                        <!-- Comments will be loaded here -->
+                    </div>
+                </div>
+            </div>
+            <div class="recommended-videos">
+                <h4>Up Next</h4>
+                <div class="recommended-list" id="recommendedList">
+                    <!-- Recommended videos will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel Modal -->
+    <div class="admin-modal" id="adminModal">
+        <div class="admin-modal-content">
+            <div class="admin-header">
+                <h3>Admin Panel</h3>
+                <button class="close-btn" id="closeAdminBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="admin-body">
+                <div class="admin-section">
+                    <h4>Theme Settings</h4>
+                    <div class="setting-item">
+                        <label>
+                            <input type="radio" name="theme" value="light" id="lightTheme">
+                            Light Theme
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label>
+                            <input type="radio" name="theme" value="dark" id="darkTheme">
+                            Dark Theme
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label>
+                            <input type="radio" name="theme" value="auto" id="autoTheme">
+                            Auto (System)
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="admin-section">
+                    <h4>Content Settings</h4>
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="autoPlay">
+                            Auto-play videos
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="showDescriptions">
+                            Show video descriptions
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label>
+                            Videos per page:
+                            <select id="videosPerPage">
+                                <option value="12">12</option>
+                                <option value="20" selected>20</option>
+                                <option value="30">30</option>
+                                <option value="50">50</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="admin-section">
+                    <h4>Data Management</h4>
+                    <button class="btn btn-warning" id="clearHistoryBtn">
+                        <i class="fas fa-trash"></i>
+                        Clear Watch History
+                    </button>
+                    <button class="btn btn-danger" id="resetSettingsBtn">
+                        <i class="fas fa-undo"></i>
+                        Reset All Settings
+                    </button>
+                </div>
+            </div>
+            <div class="admin-footer">
+                <button class="btn btn-primary" id="saveSettingsBtn">
+                    <i class="fas fa-save"></i>
+                    Save Settings
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="loading-spinner" id="loadingSpinner">
+        <i class="fas fa-spinner fa-spin"></i>
+    </div>
+
+    <!-- Create Menu Modal -->
+    <div class="create-modal" id="createModal">
+        <div class="create-modal-content">
+            <div class="create-header">
+                <h3>Create</h3>
+                <button class="close-btn" id="closeCreateBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="create-options">
+                <div class="create-option" id="uploadVideoOption">
+                    <i class="fas fa-video"></i>
+                    <div class="option-text">
+                        <h4>Upload video</h4>
+                        <p>Share a video with your community</p>
+                    </div>
+                </div>
+                <div class="create-option" id="createShortOption">
+                    <i class="fas fa-mobile-alt"></i>
+                    <div class="option-text">
+                        <h4>Create Short</h4>
+                        <p>Make a short vertical video</p>
+                    </div>
+                </div>
+                <div class="create-option" id="goLiveOption">
+                    <i class="fas fa-broadcast-tower"></i>
+                    <div class="option-text">
+                        <h4>Go live</h4>
+                        <p>Stream live to your audience</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Upload Modal -->
+    <div class="upload-modal" id="uploadModal">
+        <div class="upload-modal-content">
+            <div class="upload-header">
+                <h3>Upload Video</h3>
+                <button class="close-btn" id="closeUploadBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="upload-body">
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h4>Select files to upload</h4>
+                    <p>Or drag and drop video files</p>
+                    <input type="file" id="videoFileInput" accept="video/*" multiple style="display: none;">
+                    <button class="btn btn-primary" onclick="document.getElementById('videoFileInput').click()">
+                        SELECT FILES
+                    </button>
+                </div>
+                <div class="upload-form" id="uploadForm" style="display: none;">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="videoTitle" placeholder="Add a title for your video">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="videoDescription" placeholder="Tell viewers about your video"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Thumbnail</label>
+                        <input type="file" id="thumbnailInput" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="videoCategory">
+                            <option value="general">General</option>
+                            <option value="music">Music</option>
+                            <option value="gaming">Gaming</option>
+                            <option value="sports">Sports</option>
+                            <option value="news">News</option>
+                            <option value="learning">Learning</option>
+                        </select>
+                    </div>
+                    <div class="upload-actions">
+                        <button class="btn btn-secondary" id="cancelUploadBtn">Cancel</button>
+                        <button class="btn btn-primary" id="publishVideoBtn">Publish</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Channel Edit Modal -->
+    <div class="channel-edit-modal" id="channelEditModal">
+        <div class="channel-edit-content">
+            <div class="channel-edit-header">
+                <h3>Edit Channel</h3>
+                <button class="close-btn" id="closeChannelEditBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="channel-edit-body">
+                <div class="form-group">
+                    <label>Channel Name</label>
+                    <input type="text" id="editChannelName" placeholder="Enter channel name">
+                </div>
+                <div class="form-group">
+                    <label>Channel Description</label>
+                    <textarea id="editChannelDescription" placeholder="Describe your channel"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Channel Avatar</label>
+                    <input type="file" id="avatarInput" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label>Channel Banner</label>
+                    <input type="file" id="bannerInput" accept="image/*">
+                </div>
+                <div class="channel-edit-actions">
+                    <button class="btn btn-secondary" id="cancelChannelEditBtn">Cancel</button>
+                    <button class="btn btn-primary" id="saveChannelBtn">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Short Video Modal -->
+    <div class="short-modal" id="shortModal">
+        <div class="short-modal-content">
+            <div class="short-header">
+                <h3>Create Short</h3>
+                <button class="close-btn" id="closeShortBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="short-body">
+                <div class="short-upload-area" id="shortUploadArea">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h4>Upload vertical video</h4>
+                    <p>Select a short vertical video (max 60 seconds)</p>
+                    <input type="file" id="shortFileInput" accept="video/*" style="display: none;">
+                    <button class="btn btn-primary" onclick="document.getElementById('shortFileInput').click()">
+                        SELECT SHORT VIDEO
+                    </button>
+                </div>
+                <div class="short-form" id="shortForm" style="display: none;">
+                    <div class="short-preview">
+                        <video id="shortPreview" controls style="width: 200px; height: 356px; object-fit: cover; border-radius: 8px;"></video>
+                    </div>
+                    <div class="short-details">
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" id="shortTitle" placeholder="Add a catchy title">
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea id="shortDescription" placeholder="Describe your short video"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="shortCategory">
+                                <option value="general">General</option>
+                                <option value="music">Music</option>
+                                <option value="comedy">Comedy</option>
+                                <option value="dance">Dance</option>
+                                <option value="education">Education</option>
+                                <option value="lifestyle">Lifestyle</option>
+                            </select>
+                        </div>
+                        <div class="short-actions">
+                            <button class="btn btn-secondary" id="cancelShortBtn">Cancel</button>
+                            <button class="btn btn-primary" id="publishShortBtn">Publish Short</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Stream Modal -->
+    <div class="live-modal" id="liveModal">
+        <div class="live-modal-content">
+            <div class="live-header">
+                <h3>Go Live</h3>
+                <button class="close-btn" id="closeLiveBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="live-body">
+                <div class="live-setup">
+                    <div class="camera-preview">
+                        <video id="cameraPreview" autoplay muted style="width: 100%; height: 200px; background: #000; border-radius: 8px;"></video>
+                        <div class="camera-controls">
+                            <button class="btn btn-secondary" id="toggleCameraBtn">
+                                <i class="fas fa-video"></i>
+                                Camera
+                            </button>
+                            <button class="btn btn-secondary" id="toggleMicBtn">
+                                <i class="fas fa-microphone"></i>
+                                Microphone
+                            </button>
+                        </div>
+                    </div>
+                    <div class="live-details">
+                        <div class="form-group">
+                            <label>Stream Title</label>
+                            <input type="text" id="liveTitle" placeholder="What's your stream about?">
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea id="liveDescription" placeholder="Tell viewers what to expect"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="liveCategory">
+                                <option value="gaming">Gaming</option>
+                                <option value="music">Music</option>
+                                <option value="talk">Talk Show</option>
+                                <option value="education">Education</option>
+                                <option value="entertainment">Entertainment</option>
+                                <option value="sports">Sports</option>
+                            </select>
+                        </div>
+                        <div class="live-privacy">
+                            <label>
+                                <input type="radio" name="livePrivacy" value="public" checked>
+                                Public - Anyone can find and watch
+                            </label>
+                            <label>
+                                <input type="radio" name="livePrivacy" value="unlisted">
+                                Unlisted - Only people with link can watch
+                            </label>
+                        </div>
+                        <div class="live-actions">
+                            <button class="btn btn-secondary" id="cancelLiveBtn">Cancel</button>
+                            <button class="btn btn-danger" id="startLiveBtn">
+                                <i class="fas fa-broadcast-tower"></i>
+                                START LIVE
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Player Modal -->
+    <div class="live-player-modal" id="livePlayerModal">
+        <div class="live-player-content">
+            <button class="close-btn" id="closeLivePlayerBtn">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="live-player-container">
+                <div class="live-video-section">
+                    <video class="live-video-player" id="liveVideoPlayer" autoplay muted></video>
+                    <div class="live-badge">
+                        <span class="live-indicator"></span>
+                        LIVE
+                    </div>
+                    <div class="live-viewer-count" id="liveViewerCount">
+                        <i class="fas fa-eye"></i>
+                        <span>0 viewers</span>
+                    </div>
+                    <div class="quality-selector">
+                        <button class="quality-btn" id="qualityBtn">
+                            <i class="fas fa-cog"></i>
+                            <span>720p</span>
+                        </button>
+                        <div class="quality-dropdown" id="qualityDropdown">
+                            <button class="quality-option" data-quality="1080p">1080p</button>
+                            <button class="quality-option active" data-quality="720p">720p</button>
+                            <button class="quality-option" data-quality="480p">480p</button>
+                            <button class="quality-option" data-quality="360p">360p</button>
+                            <button class="quality-option" data-quality="auto">Auto</button>
+                        </div>
+                    </div>
+                    <div class="stream-owner-controls" id="streamOwnerControls" style="display: none;">
+                        <button class="btn btn-danger" id="endStreamBtn">
+                            <i class="fas fa-stop"></i>
+                            End Stream
+                        </button>
+                        <button class="btn btn-warning" id="deleteStreamBtn">
+                            <i class="fas fa-trash"></i>
+                            Delete
+                        </button>
+                    </div>
+                </div>
+                <div class="live-chat-section" id="liveChatSection">
+                    <div class="live-chat-header">
+                        <h4>Live Chat</h4>
+                        <div class="chat-header-controls">
+                            <button class="chat-control-btn" id="slowModeBtn" title="Slow Mode" style="display: none;">
+                                <i class="fas fa-hourglass-half"></i>
+                            </button>
+                            <button class="chat-toggle-btn" id="chatToggleBtn">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="live-chat-messages" id="liveChatMessages">
+                        <div class="chat-welcome">
+                            Welcome to live chat! Be respectful to others.
+                        </div>
+                    </div>
+                    <div class="live-chat-input-container">
+                        <button class="emoji-picker-btn" id="emojiPickerBtn">
+                            <i class="fas fa-smile"></i>
+                        </button>
+                        <input type="text" id="liveChatInput" placeholder="Say something..." maxlength="200">
+                        <button class="superchat-btn" id="superChatBtn" title="Super Chat">
+                            <i class="fas fa-dollar-sign"></i>
+                        </button>
+                        <button class="send-message-btn" id="sendMessageBtn">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    <div class="emoji-picker" id="emojiPicker" style="display: none;">
+                        <div class="emoji-grid">
+                            <button class="emoji-btn">😀</button>
+                            <button class="emoji-btn">😃</button>
+                            <button class="emoji-btn">😄</button>
+                            <button class="emoji-btn">😁</button>
+                            <button class="emoji-btn">😅</button>
+                            <button class="emoji-btn">😂</button>
+                            <button class="emoji-btn">🤣</button>
+                            <button class="emoji-btn">😊</button>
+                            <button class="emoji-btn">😇</button>
+                            <button class="emoji-btn">🙂</button>
+                            <button class="emoji-btn">😍</button>
+                            <button class="emoji-btn">🥰</button>
+                            <button class="emoji-btn">😘</button>
+                            <button class="emoji-btn">😗</button>
+                            <button class="emoji-btn">😙</button>
+                            <button class="emoji-btn">😚</button>
+                            <button class="emoji-btn">😋</button>
+                            <button class="emoji-btn">😛</button>
+                            <button class="emoji-btn">😝</button>
+                            <button class="emoji-btn">😜</button>
+                            <button class="emoji-btn">🤪</button>
+                            <button class="emoji-btn">🤨</button>
+                            <button class="emoji-btn">🧐</button>
+                            <button class="emoji-btn">🤓</button>
+                            <button class="emoji-btn">😎</button>
+                            <button class="emoji-btn">🤩</button>
+                            <button class="emoji-btn">🥳</button>
+                            <button class="emoji-btn">😏</button>
+                            <button class="emoji-btn">😒</button>
+                            <button class="emoji-btn">😞</button>
+                            <button class="emoji-btn">😔</button>
+                            <button class="emoji-btn">😟</button>
+                            <button class="emoji-btn">😕</button>
+                            <button class="emoji-btn">🙁</button>
+                            <button class="emoji-btn">☹️</button>
+                            <button class="emoji-btn">😣</button>
+                            <button class="emoji-btn">😖</button>
+                            <button class="emoji-btn">😫</button>
+                            <button class="emoji-btn">😩</button>
+                            <button class="emoji-btn">🥺</button>
+                            <button class="emoji-btn">😢</button>
+                            <button class="emoji-btn">😭</button>
+                            <button class="emoji-btn">😤</button>
+                            <button class="emoji-btn">😠</button>
+                            <button class="emoji-btn">😡</button>
+                            <button class="emoji-btn">🤬</button>
+                            <button class="emoji-btn">🤯</button>
+                            <button class="emoji-btn">😳</button>
+                            <button class="emoji-btn">🥵</button>
+                            <button class="emoji-btn">🥶</button>
+                            <button class="emoji-btn">😱</button>
+                            <button class="emoji-btn">😨</button>
+                            <button class="emoji-btn">😰</button>
+                            <button class="emoji-btn">😥</button>
+                            <button class="emoji-btn">😓</button>
+                            <button class="emoji-btn">🤗</button>
+                            <button class="emoji-btn">🤔</button>
+                            <button class="emoji-btn">🤭</button>
+                            <button class="emoji-btn">🤫</button>
+                            <button class="emoji-btn">🤥</button>
+                            <button class="emoji-btn">😶</button>
+                            <button class="emoji-btn">😐</button>
+                            <button class="emoji-btn">😑</button>
+                            <button class="emoji-btn">😬</button>
+                            <button class="emoji-btn">🙄</button>
+                            <button class="emoji-btn">😯</button>
+                            <button class="emoji-btn">😦</button>
+                            <button class="emoji-btn">😧</button>
+                            <button class="emoji-btn">😮</button>
+                            <button class="emoji-btn">😲</button>
+                            <button class="emoji-btn">🥱</button>
+                            <button class="emoji-btn">😴</button>
+                            <button class="emoji-btn">🤤</button>
+                            <button class="emoji-btn">😪</button>
+                            <button class="emoji-btn">😵</button>
+                            <button class="emoji-btn">🤐</button>
+                            <button class="emoji-btn">🥴</button>
+                            <button class="emoji-btn">🤢</button>
+                            <button class="emoji-btn">🤮</button>
+                            <button class="emoji-btn">🤧</button>
+                            <button class="emoji-btn">😷</button>
+                            <button class="emoji-btn">🤒</button>
+                            <button class="emoji-btn">🤕</button>
+                            <button class="emoji-btn">🤑</button>
+                            <button class="emoji-btn">🤠</button>
+                            <button class="emoji-btn">👍</button>
+                            <button class="emoji-btn">👎</button>
+                            <button class="emoji-btn">👏</button>
+                            <button class="emoji-btn">🙌</button>
+                            <button class="emoji-btn">👋</button>
+                            <button class="emoji-btn">🤚</button>
+                            <button class="emoji-btn">✋</button>
+                            <button class="emoji-btn">🖐️</button>
+                            <button class="emoji-btn">👌</button>
+                            <button class="emoji-btn">🤌</button>
+                            <button class="emoji-btn">🤏</button>
+                            <button class="emoji-btn">✌️</button>
+                            <button class="emoji-btn">🤞</button>
+                            <button class="emoji-btn">🤟</button>
+                            <button class="emoji-btn">🤘</button>
+                            <button class="emoji-btn">🤙</button>
+                            <button class="emoji-btn">🔥</button>
+                            <button class="emoji-btn">💯</button>
+                            <button class="emoji-btn">❤️</button>
+                            <button class="emoji-btn">💔</button>
+                            <button class="emoji-btn">💕</button>
+                            <button class="emoji-btn">💖</button>
+                            <button class="emoji-btn">💗</button>
+                            <button class="emoji-btn">💙</button>
+                            <button class="emoji-btn">💚</button>
+                            <button class="emoji-btn">💛</button>
+                            <button class="emoji-btn">🧡</button>
+                            <button class="emoji-btn">💜</button>
+                            <button class="emoji-btn">🖤</button>
+                            <button class="emoji-btn">🤍</button>
+                            <button class="emoji-btn">🤎</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="live-info-section">
+                <div class="live-stream-info">
+                    <h3 id="liveStreamTitle">Live Stream Title</h3>
+                    <div class="live-stream-meta">
+                        <div class="channel-info">
+                            <img class="channel-avatar" id="liveChannelAvatar" src="" alt="">
+                            <div class="channel-details">
+                                <h4 id="liveChannelName">Channel Name</h4>
+                                <span class="subscriber-count" id="liveSubscriberCount">0 subscribers</span>
+                            </div>
+                            <button class="btn btn-primary subscribe-btn" id="liveSubscribeBtn">Subscribe</button>
+                        </div>
+                    </div>
+                    <div class="live-stream-description" id="liveStreamDescription">
+                        Stream description will appear here...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- Toast Notifications -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="script.js?v=1.2"></script>
+</body>
+</html>
